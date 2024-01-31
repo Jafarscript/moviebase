@@ -8,7 +8,7 @@ const App = () => {
   return (
     <div className="relative">
       <SiderBar />
-      <section className="p-5 pl-20">
+      <section className="p-5 pl-24">
         <Routes>
           <Route path="/" element={<Movies />} />
           <Route path="/movie/:id" element={<MoviesInfo />} />
