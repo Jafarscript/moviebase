@@ -6,14 +6,16 @@ import { AiOutlineHome } from "react-icons/ai";
 import { BiBookBookmark } from "react-icons/bi";
 import { RiArrowRightDoubleFill } from "react-icons/ri";
 import { FiSettings } from "react-icons/fi";
+import { IoTvSharp } from "react-icons/io5";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 // import {}
 
 const SiderBar = () => {
   const [show, setShow] = useState(false);
   return (
     <section
-      className={`fixed flex py-7 px-5  h-screen ${
+      className={`fixed flex py-7 px-5  h-screen z-50 ${
         show ? "" : "w-[5rem]"
       } flex-col justify-between bg-[#f1f3f5] transition-all`}
       onMouseLeave={() => setShow(false)}
@@ -41,26 +43,28 @@ const SiderBar = () => {
                 } bg-transparent outline-none transition-all text-base text-[#111]`}
               />
               <p
-                className={`absolute top-2 right-[-70px] hidden  ${
+                className={`absolute top-2 right-[-70px] hidden text-white font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
                 Search
               </p>
             </li>
+            <Link to='/'>
             <li className="flex items-center gap-4 hover:bg-[#dee2e6] p-4 rounded-lg relative group">
               <AiOutlineHome className="text-2xl" />{" "}
               <span className={`font-semibold  ${show ? "" : "hidden"}`}>
                 Home
               </span>
               <p
-                className={`absolute top-4 right-[-65px] hidden ${
+                className={`absolute top-4 right-[-65px] hidden text-white font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
                 Home
               </p>
             </li>
+            </Link>
             {!show && (
               <li
                 className="flex items-center gap-4 hover:bg-[#dee2e6] p-4 rounded-lg cursor-pointer relative group"
@@ -69,11 +73,11 @@ const SiderBar = () => {
                 <button>
                   <RiArrowRightDoubleFill className="text-2xl" />{" "}
                 </button>
-                <span className={` font-semibold ${show ? "" : "hidden"}`}>
+                <span className={` font-semibold text-white ${show ? "" : "hidden"}`}>
                   Expand
                 </span>
                 <p
-                  className={`absolute top-4 right-[-74px] hidden ${
+                  className={`absolute top-4 right-[-74px] hidden text-white font-bold ${
                     show ? "" : "group-hover:block"
                   }`}
                 >
@@ -81,45 +85,66 @@ const SiderBar = () => {
                 </p>
               </li>
             )}
+            <Link to='/movie/:id'>
             <li className="flex items-center gap-4 hover:bg-[#dee2e6] p-4 rounded-lg relative group">
               <BiMovie className="text-2xl" />{" "}
               <span className={`font-semibold ${show ? "" : "hidden"}`}>
                 Movie
               </span>
               <p
-                className={`absolute top-4 right-[-65px] hidden ${
+                className={`absolute top-4 right-[-65px] hidden text-white  font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
                 Movie
               </p>
             </li>
+            </Link>
+            <Link to='/trending'>
+            <li className="flex items-center gap-4 hover:bg-[#dee2e6] p-4 rounded-lg relative group">
+              <IoTvSharp className="text-2xl" />
+              <span className={`font-semibold ${show ? "block" : "hidden"}`}>
+                TV Shows
+              </span>
+              <p
+                className={`absolute top-4 right-[-85px] hidden text-white font-bold ${
+                  show ? "" : "group-hover:block"
+                }`}
+              >
+                TV Shows
+              </p>
+            </li>
+            </Link>
+            <Link to='/trending'>
             <li className="flex items-center gap-4 hover:bg-[#dee2e6] p-4 rounded-lg relative group">
               <FaHotjar className="text-2xl" />
               <span className={`font-semibold ${show ? "block" : "hidden"}`}>
                 Trending
               </span>
               <p
-                className={`absolute top-4 right-[-85px] hidden ${
+                className={`absolute top-4 right-[-85px] hidden text-white font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
                 Trending
               </p>
             </li>
+            </Link>
+            <Link to='/bookmarks'>
             <li className="flex items-center gap-4 hover:bg-[#dee2e6] p-4 rounded-lg relative group">
               <BiBookBookmark className="text-2xl" />
               <span className={`font-semibold ${show ? "" : "hidden"}`}>
                 Bookmarks
               </span>
               <p
-                className={`absolute top-4 right-[-100px] hidden ${
+                className={`absolute top-4 right-[-100px] hidden text-white font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
                 Bookmarks
               </p>
             </li>
+            </Link>
           </ul>
         </nav>
       </div>
@@ -133,7 +158,7 @@ const SiderBar = () => {
           Settings
         </span>
         <p
-          className={`absolute top-4 right-[-80px] hidden group-hover:block ${
+          className={`absolute top-4 right-[-80px] hidden group-hover:block text-white font-bold ${
             show ? "hidden" : ""
           }`}
         >

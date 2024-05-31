@@ -1,0 +1,23 @@
+
+.movie-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    row-gap: 1.5rem;
+}
+
+.movie-item{
+    max-width: 13rem;
+    max-height: 19.5rem;
+    overflow: hidden;
+    position: relative;
+    border-radius: 8px;
+}
+
+
+@media screen and (max-width: 700px) {
+    .movie-list {
+        grid-template-columns: repeat(3, 1fr);
+        row-gap: 1rem;
+    }
+}
