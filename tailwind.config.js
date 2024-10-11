@@ -5,7 +5,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "leftGradient": "#000000e5",
+        "rightGradient": "#00000026"
+      }
+    },
   },
   plugins: [],
 }

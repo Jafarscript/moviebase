@@ -85,7 +85,7 @@ const SiderBar = () => {
                 </p>
               </li>
             )}
-            <Link to='/movie/:id'>
+            <Link to='/movie'>
             <li className="flex items-center gap-4 hover:bg-[#dee2e6] p-4 rounded-lg relative group">
               <BiMovie className="text-2xl" />{" "}
               <span className={`font-semibold ${show ? "" : "hidden"}`}>
@@ -100,14 +100,14 @@ const SiderBar = () => {
               </p>
             </li>
             </Link>
-            <Link to='/trending'>
+            <Link to='/tv_shows'>
             <li className="flex items-center gap-4 hover:bg-[#dee2e6] p-4 rounded-lg relative group">
               <IoTvSharp className="text-2xl" />
               <span className={`font-semibold ${show ? "block" : "hidden"}`}>
                 TV Shows
               </span>
               <p
-                className={`absolute top-4 right-[-85px] hidden text-white font-bold ${
+                className={`absolute top-4 right-[-90px] hidden text-white font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
