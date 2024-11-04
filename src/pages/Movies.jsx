@@ -11,6 +11,7 @@ const Movies = ({ endpoint, mediaType = "movie" }) => { // Default to "movie"
   const [hoveredMovieId, setHoveredMovieId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [error, setError] = useState('')
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
@@ -25,7 +26,8 @@ const Movies = ({ endpoint, mediaType = "movie" }) => { // Default to "movie"
       })
       .catch((error) => {
         console.error(error);
-        setLoading(false);
+        setLoading(true);
+        setError(error.message)
       });
   }, [endpoint, page]);
 
@@ -47,6 +49,7 @@ const Movies = ({ endpoint, mediaType = "movie" }) => { // Default to "movie"
         <div className="flex flex-col gap-4 w-full items-center justify-center min-h-[50vh]">
           <TfiReload className="text-green-500 text-4xl animate-spin" />
           Loading.... Please wait
+          <p>{error}</p>
         </div>
       ) : (
         <section className="flex flex-col gap-4">

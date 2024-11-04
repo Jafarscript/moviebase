@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import SiderBar from "./components/SiderBar";
 import Movies from "./pages/Movies";
 import MoviesInfo from "./pages/MoviesInfo";
+import Casts from "./pages/Casts";
 
 const App = () => {
   // eslint-disable-next-line no-undef
@@ -10,7 +11,8 @@ const App = () => {
   return (
     <div className="relative">
       <SiderBar />
-      <section className="p-5 pl-24">
+      <section className="p-5 md:pl-24">
+        
         <Routes>
           <Route
             path="/"
@@ -47,6 +49,10 @@ const App = () => {
                 mediaType="movie" // assuming mostly movies; adjust if needed
               />
             }
+          />
+          <Route
+          path="/:mediaType/:id/cast"
+          element={<Casts />} 
           />
           {/* Route updated to include mediaType */}
           <Route

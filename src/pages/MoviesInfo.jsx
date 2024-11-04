@@ -1,28 +1,41 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { MdArrowBackIosNew } from "react-icons/md";
+import { Link, useParams } from "react-router-dom";
 import { TfiReload } from "react-icons/tfi";
 import { FaPlay } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import CastCard from "../components/CastCard";
+import BackButton from "../components/BackButton";
 
 const MoviesInfo = () => {
   const [info, setInfo] = useState([]);
   const [trailerKey, setTrailerKey] = useState("");
+  const [credits, setCredits] = useState([]); // Initialize as an empty array
   const [loading, setLoading] = useState(true);
   const [openTrailer, setOpenTrailer] = useState(false);
   const { mediaType, id } = useParams();
-  const navigate = useNavigate();
+
   // eslint-disable-next-line no-undef
   const apiKey = process.env.API_KEY;
 
   useEffect(() => {
     setLoading(true);
+
+    // Fetch movie information
     axios
       .get(`https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${apiKey}`)
       .then((response) => setInfo(response.data))
       .catch((error) => console.error(error));
 
+    // Fetch movie credits
+    axios
+      .get(
+        `https://api.themoviedb.org/3/${mediaType}/${id}/credits?api_key=${apiKey}`
+      )
+      .then((response) => setCredits(response.data.cast || [])) // Ensure it's always an array
+      .catch((error) => console.error(error));
+
+    // Fetch trailer information
     axios
       .get(
         `https://api.themoviedb.org/3/${mediaType}/${id}/videos?api_key=${apiKey}`
@@ -39,10 +52,8 @@ const MoviesInfo = () => {
       .catch((error) => console.error(error));
   }, [mediaType, id, apiKey]);
 
-  console.log(info);
-
   return (
-    <section className="lg:w-[84%]">
+    <section className="md:w-[85%]">
       {loading ? (
         <div className="flex flex-col gap-4 w-full items-center justify-center min-h-[50vh]">
           <TfiReload className="text-green-500 text-4xl animate-spin" />
@@ -50,12 +61,7 @@ const MoviesInfo = () => {
         </div>
       ) : (
         <section>
-          <button
-            onClick={() => navigate(-1)}
-            className="text-green-700 text-base hover:bg-green-700 hover:text-white border-green-700 px-5 py-1 border rounded-md flex items-center justify-center gap-2 font-medium"
-          >
-            <MdArrowBackIosNew className="text-xs" /> Back
-          </button>
+          <BackButton />
           <div className="mt-5 h-[30vh] lg:h-[80vh] w-full relative">
             <img
               src={`https://image.tmdb.org/t/p/w1280/${info.backdrop_path}`}
@@ -103,11 +109,11 @@ const MoviesInfo = () => {
             )}
           </div>
 
-          <div className="flex gap-3 my-4">
-            {info.genres.map((genre) => (
+          <div className="flex gap-1 md:gap-3 my-4 w-full">
+            {info.genres?.map((genre) => (
               <span
                 key={genre.id}
-                className="px-4 py-1 bg-[#099268] text-white rounded-lg text-lg"
+                className="px-4 py-1 bg-[#099268] text-white rounded-lg  md:text-lg"
               >
                 {genre.name}
               </span>
@@ -116,19 +122,46 @@ const MoviesInfo = () => {
 
           <div className="flex items-center gap-6 mb-4">
             <div className="flex flex-col items-center gap-2 p-6 border border-[#099268] rounded-md">
-              <span className="text-3xl text-[#099268]">{info.vote_average}</span>
+              <span className="text-3xl text-[#099268]">
+                {info.vote_average}
+              </span>
               <span className="text-sm text-gray-500">{info.vote_count}</span>
             </div>
             <div>
               <p className="text-[#099268]">
-                Release Date: <span className="text-black">{info.release_date}</span>
+                Release Date:{" "}
+                <span className="text-black">{info.release_date}</span>
               </p>
-              <p className="text-[#099268]">Duration: <span className="text-black">{info.runtime} min</span></p>
-              <p className="text-[#099268]">Status: <span className="text-black">{info.status}</span></p>
+              <p className="text-[#099268]">
+                Duration: <span className="text-black">{info.runtime} min</span>
+              </p>
+              <p className="text-[#099268]">
+                Status: <span className="text-black">{info.status}</span>
+              </p>
             </div>
           </div>
 
           <p className="text-lg">{info.overview}</p>
+
+          {credits.length > 0 ? (<section className="mt-4">
+            <h2 className="text-4xl font-medium">Casts</h2>
+            <div className="flex gap-4 mt-4 flex-wrap w-full">
+              {Array.isArray(credits) &&
+                credits
+                  .slice(0, 10)
+                  .map((member) => (
+                    <CastCard member={member} key={member.id} />
+                  ))}
+              <Link
+                to={`/${mediaType}/${id}/cast`}
+                className="text-center flex items-center justify-center w-40 h-52 border-2 border-[#099268] rounded-md"
+              >
+                <p className="text-[#099268]">Show All →</p>
+              </Link>
+            </div>
+          </section>) : (
+            <p>No cast information available.</p>
+          )}
         </section>
       )}
     </section>
