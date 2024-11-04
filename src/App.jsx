@@ -1,14 +1,12 @@
-// import React from 'react'
 import { Routes, Route } from "react-router-dom";
 import SiderBar from "./components/SiderBar";
 import Movies from "./pages/Movies";
 import MoviesInfo from "./pages/MoviesInfo";
-// import { useState } from "react";
 
 const App = () => {
   // eslint-disable-next-line no-undef
   const apiKey = process.env.API_KEY;
-  // const [aside, setAside] = useState(false)
+
   return (
     <div className="relative">
       <SiderBar />
@@ -19,6 +17,7 @@ const App = () => {
             element={
               <Movies
                 endpoint={`https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}`}
+                mediaType="movie"
               />
             }
           />
@@ -27,6 +26,7 @@ const App = () => {
             element={
               <Movies
                 endpoint={`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}`}
+                mediaType="movie"
               />
             }
           />
@@ -35,6 +35,7 @@ const App = () => {
             element={
               <Movies
                 endpoint={`https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}`}
+                mediaType="tv"
               />
             }
           />
@@ -43,14 +44,14 @@ const App = () => {
             element={
               <Movies
                 endpoint={`https://api.themoviedb.org/3/trending/all/day?api_key=${apiKey}`}
+                mediaType="movie" // assuming mostly movies; adjust if needed
               />
             }
           />
+          {/* Route updated to include mediaType */}
           <Route
-            path="/:id"
-            element={
-              <MoviesInfo />
-            }
+            path="/:mediaType/:id"
+            element={<MoviesInfo />}
           />
         </Routes>
       </section>
