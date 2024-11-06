@@ -152,12 +152,14 @@ const MoviesInfo = () => {
                   .map((member) => (
                     <CastCard member={member} key={member.id} />
                   ))}
-              <Link
-                to={`/${mediaType}/${id}/cast`}
-                className="text-center flex items-center justify-center w-40 h-52 border-2 border-[#099268] rounded-md"
-              >
-                <p className="text-[#099268]">Show All →</p>
-              </Link>
+              {
+                credits.length > 10 && (<Link
+                  to={`/${mediaType}/${id}/cast`}
+                  className="text-center flex items-center justify-center w-32 h-40 md:w-40 md:h-52 border-2 border-[#099268] rounded-md"
+                >
+                  <p className="text-[#099268]">Show All →</p>
+                </Link>)
+              }
             </div>
           </section>) : (
             <p>No cast information available.</p>

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { RiMovie2Fill } from "react-icons/ri";
 import { BsSearch } from "react-icons/bs";
 import { FaHotjar } from "react-icons/fa";
@@ -11,14 +12,28 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 // import {}
 
-const SiderBar = () => {
+const SiderBar = ({setOpenSidebar}) => {
   const [show, setShow] = useState(false);
   return (
     <section
       className={`fixed flex py-7 px-5  h-screen z-50 ${
         show ? "" : "w-[5rem]"
       } flex-col justify-between bg-[#f1f3f5] transition-all`}
-      onMouseLeave={() => setShow(false)}
+      onMouseLeave={() => {
+        setShow(false)
+        setOpenSidebar(false)
+      }}
+      onMouseEnter={() => setOpenSidebar(true)}
+      onTouchEnd={() => {
+        setShow(false)
+        setOpenSidebar(false)
+      }}
+      onTouchMove={() => setOpenSidebar(true)}
+      onClick={() => { 
+        show ? setShow(false) : ''
+        setOpenSidebar(false)
+      }}
+      onFocus={() => setOpenSidebar(true)}
     >
       <div className="text-center transition-all">
         <header className="flex items-center gap-4">
@@ -43,7 +58,7 @@ const SiderBar = () => {
                 } bg-transparent outline-none transition-all text-base text-[#111]`}
               />
               <p
-                className={`absolute top-2 right-[-70px] hidden text-white font-bold ${
+                className={`absolute top-2 right-[-70px] hidden text-[#099268] font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
@@ -57,7 +72,7 @@ const SiderBar = () => {
                 Home
               </span>
               <p
-                className={`absolute top-4 right-[-65px] hidden text-white font-bold ${
+                className={`absolute top-4 right-[-65px] hidden text-[#099268] font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
@@ -77,7 +92,7 @@ const SiderBar = () => {
                   Expand
                 </span>
                 <p
-                  className={`absolute top-4 right-[-74px] hidden text-white font-bold ${
+                  className={`absolute top-4 right-[-74px] hidden text-[#099268] font-bold ${
                     show ? "" : "group-hover:block"
                   }`}
                 >
@@ -92,7 +107,7 @@ const SiderBar = () => {
                 Movie
               </span>
               <p
-                className={`absolute top-4 right-[-65px] hidden text-white  font-bold ${
+                className={`absolute top-4 right-[-65px] hidden text-[#099268]  font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
@@ -107,7 +122,7 @@ const SiderBar = () => {
                 TV Shows
               </span>
               <p
-                className={`absolute top-4 right-[-90px] hidden text-white font-bold ${
+                className={`absolute top-4 right-[-90px] hidden text-[#099268] font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
@@ -122,7 +137,7 @@ const SiderBar = () => {
                 Trending
               </span>
               <p
-                className={`absolute top-4 right-[-85px] hidden text-white font-bold ${
+                className={`absolute top-4 right-[-85px] hidden text-[#099268] font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
@@ -137,7 +152,7 @@ const SiderBar = () => {
                 Bookmarks
               </span>
               <p
-                className={`absolute top-4 right-[-100px] hidden text-white font-bold ${
+                className={`absolute top-4 right-[-100px] hidden text-[#099268] font-bold ${
                   show ? "" : "group-hover:block"
                 }`}
               >
@@ -158,7 +173,7 @@ const SiderBar = () => {
           Settings
         </span>
         <p
-          className={`absolute top-4 right-[-80px] hidden group-hover:block text-white font-bold ${
+          className={`absolute top-4 right-[-80px] hidden group-hover:block text-[#099268] font-bold ${
             show ? "hidden" : ""
           }`}
         >

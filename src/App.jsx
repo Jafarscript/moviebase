@@ -3,15 +3,18 @@ import SiderBar from "./components/SiderBar";
 import Movies from "./pages/Movies";
 import MoviesInfo from "./pages/MoviesInfo";
 import Casts from "./pages/Casts";
+import { useState } from "react";
 
 const App = () => {
   // eslint-disable-next-line no-undef
   const apiKey = process.env.API_KEY;
+  const [openSidebar, setOpenSidebar] = useState(false);
+  console.log(openSidebar)
 
   return (
     <div className="relative">
-      <SiderBar />
-      <section className="p-5 md:pl-24">
+      <SiderBar setOpenSidebar={setOpenSidebar} />
+      <section className={`p-5 md:pl-24 ${openSidebar ? "opacity-35" : '' }`}>
         
         <Routes>
           <Route

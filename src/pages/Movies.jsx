@@ -1,21 +1,26 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { BiExpand } from "react-icons/bi";
 import { TfiReload } from "react-icons/tfi";
 import "./Movies.css";
 
 // eslint-disable-next-line react/prop-types
-const Movies = ({ endpoint, mediaType = "movie" }) => { // Default to "movie"
+const Movies = ({ endpoint, mediaType = "movie" }) => {
+  // Default to "movie"
   const [movies, setMovies] = useState([]);
   const [hoveredMovieId, setHoveredMovieId] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [error, setError] = useState('')
+  const [page, setPage] = useState(sessionStorage.getItem("page") || 1);
+  const [inputPage, setInputPage] = useState(page);
+  const [error, setError] = useState("");
   const [totalPages, setTotalPages] = useState(1);
+  const location = useLocation(); // Access the current route location
+  // const history = useHistory(); // Access history to navigate
 
   useEffect(() => {
     setLoading(true);
+
     axios
       .get(`${endpoint}&page=${page}`)
       .then((response) => {
@@ -23,13 +28,29 @@ const Movies = ({ endpoint, mediaType = "movie" }) => { // Default to "movie"
         setPage(response.data.page);
         setTotalPages(response.data.total_pages);
         setLoading(false);
+        setInputPage(page);
       })
       .catch((error) => {
         console.error(error);
         setLoading(true);
-        setError(error.message)
+        setError(error.message);
       });
+      
+      sessionStorage.setItem("page", page);
+  
   }, [endpoint, page]);
+
+  useEffect(() => {
+    // Reset page to 1 when moving between unrelated routes
+    if (location.pathname !== sessionStorage.getItem("lastPath")) {
+      setPage(1);
+    }
+
+    // Store current path in session storage
+    sessionStorage.setItem("lastPath", location.pathname);
+
+  }, [location]);
+
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -40,6 +61,22 @@ const Movies = ({ endpoint, mediaType = "movie" }) => { // Default to "movie"
   const handlePreviousPage = () => {
     if (page > 1) {
       setPage(page - 1);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    if (value === "" || (Number(value) >= 1 && Number(value) <= totalPages)) {
+      setInputPage(value);
+    }
+  };
+
+  const handleInputBlur = () => {
+    const newPage = parseInt(inputPage);
+    if (newPage && newPage !== page) {
+      setPage(newPage);
+    } else {
+      setInputPage(page); // reset if input was invalid or empty
     }
   };
 
@@ -61,7 +98,9 @@ const Movies = ({ endpoint, mediaType = "movie" }) => { // Default to "movie"
                 onMouseEnter={() => setHoveredMovieId(movie.id)}
                 onMouseLeave={() => setHoveredMovieId(null)}
               >
-                <Link to={`/${mediaType}/${movie.id}`}> {/* Add mediaType to path */}
+                <Link to={`/${mediaType}/${movie.id}`} state={{ page }}>
+                  {" "}
+                  {/* Add mediaType to path */}
                   <img
                     src={`https://image.tmdb.org/t/p/w1280/${movie.poster_path}`}
                     alt={movie.title || movie.name}
@@ -72,7 +111,11 @@ const Movies = ({ endpoint, mediaType = "movie" }) => { // Default to "movie"
                   to={`/${mediaType}/${movie.id}`}
                   className={`absolute inset-0 bg-black/80 flex flex-col justify-end items-center p-2 
                     transition-all duration-300 
-                    ${hoveredMovieId === movie.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full pointer-events-none'}
+                    ${
+                      hoveredMovieId === movie.id
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-full pointer-events-none"
+                    }
                   `}
                 >
                   <p className="absolute top-2/4 bottom-2/4 text-green-500 text-xl flex gap-2 items-center justify-center">
@@ -94,7 +137,15 @@ const Movies = ({ endpoint, mediaType = "movie" }) => { // Default to "movie"
               Previous
             </button>
             <span>
-              Page <input type="number" value={page} className="w-10 text-center outline-none" onChange={(e) => setPage(e.target.value)} /> of {totalPages}
+              Page{" "}
+              <input
+                type="number"
+                value={inputPage}
+                className="w-10 text-center outline-none"
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+              />{" "}
+              of {totalPages}
             </span>
             <button
               onClick={handleNextPage}
