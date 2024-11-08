@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CastCard from "../components/CastCard";
 import BackButton from "../components/BackButton";
-import { TfiReload } from "react-icons/tfi";
+import Loader from "../components/Loader";
 
 const Casts = () => {
   const [credits, setCredits] = useState([]); // Initialize as an empty array
   const [loading, setLoading] = useState(true);
   const { mediaType, id } = useParams();
+  const [error, setError] = useState("");
 
   // eslint-disable-next-line no-undef
   const apiKey = process.env.API_KEY;
@@ -24,15 +25,16 @@ const Casts = () => {
         setCredits(response.data.cast || [])
         setLoading(false)
     }) // Ensure it's always an array
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setLoading(true);
+        setError(error.message);
+      });
   }, [mediaType, id, apiKey]);
   return (
     <section>
         {loading ? (
-            <div className="flex flex-col gap-4 w-full items-center justify-center min-h-[50vh]">
-            <TfiReload className="text-green-500 text-4xl animate-spin" />
-            Loading.... Please wait
-          </div>
+          <Loader error={error} />
         ): (
             <>
             <BackButton />

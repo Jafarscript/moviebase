@@ -1,17 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { TfiReload } from "react-icons/tfi";
 import { FaPlay } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import CastCard from "../components/CastCard";
 import BackButton from "../components/BackButton";
+import { BiBookBookmark } from "react-icons/bi";
+import Loader from "../components/Loader";
 
 const MoviesInfo = () => {
   const [info, setInfo] = useState([]);
   const [trailerKey, setTrailerKey] = useState("");
   const [credits, setCredits] = useState([]); // Initialize as an empty array
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [openTrailer, setOpenTrailer] = useState(false);
   const { mediaType, id } = useParams();
 
@@ -25,7 +27,11 @@ const MoviesInfo = () => {
     axios
       .get(`https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${apiKey}`)
       .then((response) => setInfo(response.data))
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setLoading(true);
+        setError(error.message);
+      });
 
     // Fetch movie credits
     axios
@@ -33,7 +39,11 @@ const MoviesInfo = () => {
         `https://api.themoviedb.org/3/${mediaType}/${id}/credits?api_key=${apiKey}`
       )
       .then((response) => setCredits(response.data.cast || [])) // Ensure it's always an array
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setLoading(true);
+        setError(error.message);
+      });
 
     // Fetch trailer information
     axios
@@ -49,16 +59,17 @@ const MoviesInfo = () => {
         }
         setLoading(false);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setLoading(true);
+        setError(error.message);
+      });
   }, [mediaType, id, apiKey]);
 
   return (
     <section className="md:w-[85%]">
       {loading ? (
-        <div className="flex flex-col gap-4 w-full items-center justify-center min-h-[50vh]">
-          <TfiReload className="text-green-500 text-4xl animate-spin" />
-          Loading.... Please wait
-        </div>
+        <Loader error={error} />
       ) : (
         <section>
           <BackButton />
@@ -101,7 +112,7 @@ const MoviesInfo = () => {
 
             {openTrailer && (
               <button
-                className="bg-red-500 rounded-md p-1 text-2xl absolute top-0 -right-8 text-white"
+                className="bg-red-500 rounded-md p-1 text-2xl absolute top-0 z-30 -right-5 md:-right-8 text-white"
                 onClick={() => setOpenTrailer(false)}
               >
                 <IoClose />
@@ -113,13 +124,14 @@ const MoviesInfo = () => {
             {info.genres?.map((genre) => (
               <span
                 key={genre.id}
-                className="px-4 py-1 bg-[#099268] text-white rounded-lg  md:text-lg"
+                className="px-4 py-1 bg-[#099268] text-white  rounded-lg text-shadow  md:text-lg"
               >
                 {genre.name}
               </span>
             ))}
           </div>
 
+          <section className="flex justify-between">
           <div className="flex items-center gap-6 mb-4">
             <div className="flex flex-col items-center gap-2 p-6 border border-[#099268] rounded-md">
               <span className="text-3xl text-[#099268]">
@@ -140,7 +152,12 @@ const MoviesInfo = () => {
               </p>
             </div>
           </div>
+          <div>
+            <button className="flex px-4 py-1 rounded-md border border-[#099268] items-center gap-4 text-[#099268] text-lg text-shadow"><BiBookBookmark /> <span>Bookmark</span></button>
+          </div>
+          </section>
 
+          <h3 className="text-2xl font-bold">Overview</h3>
           <p className="text-lg">{info.overview}</p>
 
           {credits.length > 0 ? (<section className="mt-4">
