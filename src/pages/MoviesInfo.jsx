@@ -120,7 +120,7 @@ const MoviesInfo = () => {
             )}
           </div>
 
-          <div className="flex gap-1 md:gap-3 my-4 w-full">
+          <div className="flex gap-1 md:gap-3 my-4 w-full flex-wrap">
             {info.genres?.map((genre) => (
               <span
                 key={genre.id}
@@ -131,7 +131,7 @@ const MoviesInfo = () => {
             ))}
           </div>
 
-          <section className="flex justify-between">
+          <section className="flex justify-between flex-wrap">
           <div className="flex items-center gap-6 mb-4">
             <div className="flex flex-col items-center gap-2 p-6 border border-[#099268] rounded-md">
               <span className="text-3xl text-[#099268]">

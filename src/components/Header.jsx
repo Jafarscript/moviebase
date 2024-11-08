@@ -22,7 +22,7 @@ const Header = ({ setSelectedGenre, mediaType, selectedGenre }) => {
     };
 
     fetchGenres();
-  }, [apiKey]);
+  }, [apiKey, mediaType]);
 
   
 

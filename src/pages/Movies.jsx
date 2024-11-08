@@ -107,10 +107,10 @@ const Movies = ({ endpoint, mediaType = "movie"}) => {
                             : "opacity-0 translate-y-full pointer-events-none"
                         }`}
                     >
-                      <p className="absolute top-2/4 bottom-2/4 text-green-500 text-xl flex gap-2 items-center justify-center">
+                      <p className="absolute top-2/4 bottom-2/4 text-green-500 flex gap-2 items-center justify-center text-sm md:text-lg">
                         <BiExpand /> More
                       </p>
-                      <h1 className="bg-[#dee2e6] text-center w-full rounded-lg py-4 px-2">
+                      <h1 className="bg-[#dee2e6] text-center text-xs md:text-base w-full rounded-lg py-4 px-2">
                         {movie.title || movie.name}
                       </h1>
                     </Link>
