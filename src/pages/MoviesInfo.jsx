@@ -9,6 +9,7 @@ import { BiBookBookmark } from "react-icons/bi";
 import Loader from "../components/Loader";
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalState";
+import { enqueueSnackbar } from "notistack";
 
 const MoviesInfo = () => {
   const [info, setInfo] = useState([]);
@@ -76,8 +77,10 @@ const MoviesInfo = () => {
   const handleBookmark = () => {
     if (isBookmarked) {
       removeMovieFromBookMark(id);
+      enqueueSnackbar('Remove From BookMark')
     } else {
       addMovieToBookMark(id, mediaType);
+      enqueueSnackbar('Added to BookMark')
     }
   };
 
