@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { GlobalContext } from "../context/GlobalState";
 
 const Header = ({ setSelectedGenre, mediaType, selectedGenre }) => {
   const [genres, setGenres] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const { darkTheme } = useContext(GlobalContext);
   // eslint-disable-next-line no-undef
   const apiKey = process.env.API_KEY;
 
@@ -44,7 +46,7 @@ const Header = ({ setSelectedGenre, mediaType, selectedGenre }) => {
 
   return (
     <header className="flex justify-between items-center text-black mb-5">
-      <h1 className="text-2xl font-bold capitalize">{mediaType} Explorer</h1>
+      <h1 className={` ${darkTheme ? 'text-white' : ''} text-2xl font-bold capitalize`}>{mediaType} Explorer</h1>
       <div className="relative">
         <button
           onClick={() => setShowDropdown(!showDropdown)}

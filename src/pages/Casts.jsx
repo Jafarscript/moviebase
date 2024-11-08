@@ -40,7 +40,9 @@ const Casts = () => {
             <BackButton />
             <div className="flex gap-4 mt-4 flex-wrap w-full">
               {credits.length > 0 ? (
-                credits.map((member) => <CastCard member={member} key={member.id} />)
+                credits.map((member) =>
+                (<CastCard member={member} key={member.id} />)
+              )
               ) : (
                 <p>No cast information available.</p>
               )}

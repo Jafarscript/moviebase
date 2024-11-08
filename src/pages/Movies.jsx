@@ -1,16 +1,16 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { BiExpand } from "react-icons/bi";
+import { useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./Movies.css";
 import Loader from "../components/Loader";
 import Header from "../components/Header";
+import MovieCard from "../components/MovieCard";
+import { GlobalContext } from "../context/GlobalState";
 
 // eslint-disable-next-line react/prop-types
-const Movies = ({ endpoint, mediaType = "movie"}) => {
+const Movies = ({ endpoint, mediaType = "movie", showGenre = false}) => {
   // Default to "movie"
   const [movies, setMovies] = useState([]);
-  const [hoveredMovieId, setHoveredMovieId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(sessionStorage.getItem("page") || 1);
   const [inputPage, setInputPage] = useState(page);
@@ -19,6 +19,7 @@ const Movies = ({ endpoint, mediaType = "movie"}) => {
   const [selectedGenre, setSelectedGenre] = useState();
   const location = useLocation(); // Access the current route location
   // const history = useHistory(); // Access history to navigate
+  const { darkTheme } = useContext(GlobalContext);
 
   useEffect(() => {
     setLoading(true);
@@ -76,45 +77,15 @@ const Movies = ({ endpoint, mediaType = "movie"}) => {
       ) : (
         <>
           {movies.length === 0 ? (
-            <p className="text-center text-gray-500 text-xl mt-8">
+            <p className={`text-center ${darkTheme ? "text-white" : "text-gray-500"} text-xl mt-8`}>
               No results found.
             </p>
           ) : (
             <section className="flex flex-col gap-4">
-              <Header  setSelectedGenre={setSelectedGenre} mediaType={mediaType} selectedGenre={selectedGenre} />
+              {showGenre && <Header  setSelectedGenre={setSelectedGenre} mediaType={mediaType} selectedGenre={selectedGenre} />}
               <div className="movie-list">
                 {movies.map((movie) => (
-                  <div
-                    key={movie.id}
-                    className="movie-item relative"
-                    onMouseEnter={() => setHoveredMovieId(movie.id)}
-                    onMouseLeave={() => setHoveredMovieId(null)}
-                  >
-                    <Link to={`/${mediaType}/${movie.id}`} state={{ page }}>
-                      <img
-                        src={`https://image.tmdb.org/t/p/w1280/${movie.poster_path}`}
-                        alt={movie.title || movie.name}
-                        className="w-full h-full"
-                      />
-                    </Link>
-                    <Link
-                      to={`/${mediaType}/${movie.id}`}
-                      className={`absolute inset-0 bg-black/80 flex flex-col justify-end items-center p-2 
-                        transition-all duration-300 
-                        ${
-                          hoveredMovieId === movie.id
-                            ? "opacity-100 translate-y-0"
-                            : "opacity-0 translate-y-full pointer-events-none"
-                        }`}
-                    >
-                      <p className="absolute top-2/4 bottom-2/4 text-green-500 flex gap-2 items-center justify-center text-sm md:text-lg">
-                        <BiExpand /> More
-                      </p>
-                      <h1 className="bg-[#dee2e6] text-center text-xs md:text-base w-full rounded-lg py-4 px-2">
-                        {movie.title || movie.name}
-                      </h1>
-                    </Link>
-                  </div>
+                  <MovieCard key={movie.id} movie={movie} mediaType={mediaType} />
                 ))}
               </div>
             </section>
@@ -134,7 +105,7 @@ const Movies = ({ endpoint, mediaType = "movie"}) => {
               <input
                 type="number"
                 value={inputPage}
-                className="w-10 text-center outline-none"
+                className="w-10 text-black text-center outline-none"
                 onChange={(e) => setInputPage(e.target.value)}
               /></form>{" "}
               of {totalPages}

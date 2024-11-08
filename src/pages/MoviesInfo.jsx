@@ -7,6 +7,8 @@ import CastCard from "../components/CastCard";
 import BackButton from "../components/BackButton";
 import { BiBookBookmark } from "react-icons/bi";
 import Loader from "../components/Loader";
+import { useContext } from "react";
+import { GlobalContext } from "../context/GlobalState";
 
 const MoviesInfo = () => {
   const [info, setInfo] = useState([]);
@@ -16,6 +18,7 @@ const MoviesInfo = () => {
   const [error, setError] = useState("");
   const [openTrailer, setOpenTrailer] = useState(false);
   const { mediaType, id } = useParams();
+  const { addMovieToBookMark, bookmark, removeMovieFromBookMark, darkTheme } = useContext(GlobalContext);
 
   // eslint-disable-next-line no-undef
   const apiKey = process.env.API_KEY;
@@ -66,6 +69,21 @@ const MoviesInfo = () => {
       });
   }, [mediaType, id, apiKey]);
 
+  const isBookmarked = bookmark.some(
+    (bookmark) => bookmark.id === id && bookmark.mediaType === mediaType
+  );
+
+  const handleBookmark = () => {
+    if (isBookmarked) {
+      removeMovieFromBookMark(id);
+    } else {
+      addMovieToBookMark(id, mediaType);
+    }
+  };
+
+  console.log(credits)
+
+
   return (
     <section className="md:w-[85%]">
       {loading ? (
@@ -84,7 +102,7 @@ const MoviesInfo = () => {
                 {info.title || info.name}
               </h1>
               <button
-                className="text-white hover:bg-green-700 flex items-center px-4 py-3 rounded-lg gap-3 border border-green-700"
+                className="text-white hover:bg-[#099268] flex items-center px-4 py-3 rounded-lg gap-3 border border-[#099268]"
                 onClick={() => setOpenTrailer(true)}
               >
                 <FaPlay />{" "}
@@ -132,53 +150,61 @@ const MoviesInfo = () => {
           </div>
 
           <section className="flex justify-between flex-wrap">
-          <div className="flex items-center gap-6 mb-4">
-            <div className="flex flex-col items-center gap-2 p-6 border border-[#099268] rounded-md">
-              <span className="text-3xl text-[#099268]">
-                {info.vote_average}
-              </span>
-              <span className="text-sm text-gray-500">{info.vote_count}</span>
+            <div className="flex items-center gap-6 mb-4">
+              <div className="flex flex-col items-center gap-2 p-6 min-w-28 border border-[#099268] rounded-md">
+                <span className="text-3xl text-[#099268]">
+                  {info.vote_average}
+                </span>
+                <span className="text-sm text-gray-500">{info.vote_count}</span>
+              </div>
+              <div>
+                <p className="text-[#099268]">
+                  Release Date:{" "}
+                  <span className={`${darkTheme ? 'text-white' : 'text-black'}`}>{info.release_date}</span>
+                </p>
+                <p className="text-[#099268]">
+                  Duration:{" "}
+                  <span className={`${darkTheme ? 'text-white' : 'text-black'}`}>{info.runtime} min</span>
+                </p>
+                <p className="text-[#099268]">
+                  Status: <span className={`${darkTheme ? 'text-white' : 'text-black'}`}>{info.status}</span>
+                </p>
+              </div>
             </div>
             <div>
-              <p className="text-[#099268]">
-                Release Date:{" "}
-                <span className="text-black">{info.release_date}</span>
-              </p>
-              <p className="text-[#099268]">
-                Duration: <span className="text-black">{info.runtime} min</span>
-              </p>
-              <p className="text-[#099268]">
-                Status: <span className="text-black">{info.status}</span>
-              </p>
+              <button
+                onClick={handleBookmark}
+                className={`flex px-4 py-1 rounded-md ${isBookmarked ? 'bg-[#099268] text-white' : ' border border-[#099268] text-[#099268]'}  items-center gap-4  text-lg text-shadow`}
+              >
+                <BiBookBookmark /> {isBookmarked ? 'BookMarked' : "Bookmark"}
+              </button>
             </div>
-          </div>
-          <div>
-            <button className="flex px-4 py-1 rounded-md border border-[#099268] items-center gap-4 text-[#099268] text-lg text-shadow"><BiBookBookmark /> <span>Bookmark</span></button>
-          </div>
           </section>
 
           <h3 className="text-2xl font-bold">Overview</h3>
           <p className="text-lg">{info.overview}</p>
 
-          {credits.length > 0 ? (<section className="mt-4">
-            <h2 className="text-4xl font-medium">Casts</h2>
-            <div className="flex gap-4 mt-4 flex-wrap w-full">
-              {Array.isArray(credits) &&
-                credits
-                  .slice(0, 10)
-                  .map((member) => (
-                    <CastCard member={member} key={member.id} />
-                  ))}
-              {
-                credits.length > 10 && (<Link
-                  to={`/${mediaType}/${id}/cast`}
-                  className="text-center flex items-center justify-center w-32 h-40 md:w-40 md:h-52 border-2 border-[#099268] rounded-md"
-                >
-                  <p className="text-[#099268]">Show All →</p>
-                </Link>)
-              }
-            </div>
-          </section>) : (
+          {credits.length > 0 ? (
+            <section className="mt-4">
+              <h2 className="text-4xl font-medium">Casts</h2>
+              <div className="flex gap-4 mt-4 flex-wrap w-full">
+                {Array.isArray(credits) &&
+                  credits
+                    .slice(0, 10)
+                    .map((member) => (
+                      <CastCard member={member} key={member.id} />
+                    ))}
+                {credits.length > 10 && (
+                  <Link
+                    to={`/${mediaType}/${id}/cast`}
+                    className="text-center flex items-center justify-center w-32 h-40 md:w-40 md:h-52 border-2 border-[#099268] rounded-md text-[#099268] group hover:bg-[#099268] hover:text-white"
+                  >
+                    Show All <span className="group-hover:translate-x-1  transition-all ease-linear text-lg duration-200">→</span>
+                  </Link>
+                )}
+              </div>
+            </section>
+          ) : (
             <p>No cast information available.</p>
           )}
         </section>
