@@ -19,7 +19,7 @@ const Search = () => {
 
   return (
     <section>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 mb-4">
         <button
           onClick={() => setSelectedTab("movie")}
           className={`${tab === "movie" ? 'bg-[#099268] text-white' : 'border border-[#099268] text-[#099268]'} px-3 py-1 rounded-sm flex items-center  gap-2`}
