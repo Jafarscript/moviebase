@@ -16,12 +16,16 @@ const Movies = ({ endpoint, mediaType = "movie", showGenre = false}) => {
   const [inputPage, setInputPage] = useState(page);
   const [error, setError] = useState("");
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedGenre, setSelectedGenre] = useState();
+  const [selectedGenre, setSelectedGenre] = useState('');
   const location = useLocation(); // Access the current route location
   // const history = useHistory(); // Access history to navigate
   const { darkTheme } = useContext(GlobalContext);
 
   useEffect(() => {
+    const savedGenre = sessionStorage.getItem("selectedGenre");
+  if (savedGenre) {
+    setSelectedGenre(savedGenre);
+  }
     setLoading(true);
 
     axios
@@ -40,21 +44,21 @@ const Movies = ({ endpoint, mediaType = "movie", showGenre = false}) => {
       });
       
       sessionStorage.setItem("page", page);
+      sessionStorage.setItem("selectedGenre", selectedGenre || "");
   
   }, [endpoint, page,selectedGenre]);
 
   useEffect(() => {
-    // Get the current path and search query
-    const currentPathWithQuery = `${location.pathname}${location.search}`;
+    const [mediaType] = location.pathname.split('/').slice(1);
   
-    // Reset page to 1 if the path + query changes (except when it's a page change)
-    if (currentPathWithQuery !== sessionStorage.getItem("lastPathWithQuery")) {
+    // Check if the media type has changed
+    if (mediaType !== sessionStorage.getItem('previousMediaType')) {
+      sessionStorage.clear();
       setPage(1);
+      setSelectedGenre('')
+      sessionStorage.setItem('previousMediaType', mediaType);
     }
-  
-    // Store the current path with query in session storage
-    sessionStorage.setItem("lastPathWithQuery", currentPathWithQuery);
-  }, [location]);
+  }, [location.pathname]);
   
 
 
