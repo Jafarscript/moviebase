@@ -38,7 +38,7 @@ const Casts = () => {
         ): (
             <>
             <BackButton />
-            <div className="flex gap-4 mt-4 flex-wrap w-full">
+            <div className="flex gap-4 mt-4 flex-wrap w-full justify-center md:justify-start">
               {credits.length > 0 ? (
                 credits.map((member) =>
                 (<CastCard member={member} key={member.id} />)

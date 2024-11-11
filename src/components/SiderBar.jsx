@@ -53,7 +53,7 @@ const SiderBar = ({setOpenSidebar, openSidebar, setOpenSettings}) => {
           <span className={`uppercase ${show ? "" : "md:hidden"}`}>MovieBase</span>
         </header>
         <nav className="mt-8 flex justify-center transition-all">
-          <ul className={`flex gap-1 flex-col ${show ? '' : 'md:w-[60px]'} `}>
+          <ul className={`flex gap-1 flex-col ${show ? 'gap-2' : 'md:w-[60px]'} `}>
             <li
               onClick={() => setShow(true)}
               className={`flex items-center gap-4 ${darkTheme ? 'hover:bg-[#222] bg-[#222]' : 'hover:bg-[#dee2e6] bg-[#dee2e6]'}  px-4  py-2 rounded-lg relative group ${

@@ -84,7 +84,7 @@ const MoviesInfo = () => {
     }
   };
 
-  console.log(credits)
+  // console.log(info)
 
 
   return (
@@ -160,7 +160,8 @@ const MoviesInfo = () => {
                 </span>
                 <span className="text-sm text-gray-500">{info.vote_count}</span>
               </div>
-              <div>
+              {mediaType === 'movie' ? (
+                <div>
                 <p className="text-[#099268]">
                   Release Date:{" "}
                   <span className={`${darkTheme ? 'text-white' : 'text-black'}`}>{info.release_date}</span>
@@ -173,6 +174,22 @@ const MoviesInfo = () => {
                   Status: <span className={`${darkTheme ? 'text-white' : 'text-black'}`}>{info.status}</span>
                 </p>
               </div>
+              ) : (
+                <div>
+                <p className="text-[#099268]">
+                  Release Date:{" "}
+                  <span className={`${darkTheme ? 'text-white' : 'text-black'}`}>{info.first_air_date}</span>
+                </p>
+                <p className="text-[#099268]">
+                  Number Of Seasons:{" "}
+                  <span className={`${darkTheme ? 'text-white' : 'text-black'}`}>{info.number_of_seasons
+                  }</span>
+                </p>
+                <p className="text-[#099268]">
+                  Status: <span className={`${darkTheme ? 'text-white' : 'text-black'}`}>{info.status}</span>
+                </p>
+              </div>
+              )}
             </div>
             <div>
               <button
@@ -184,13 +201,13 @@ const MoviesInfo = () => {
             </div>
           </section>
 
-          <h3 className="text-2xl font-bold">Overview</h3>
+          <h3 className="text-2xl font-bold mt-1">Overview</h3>
           <p className="text-lg">{info.overview}</p>
 
           {credits.length > 0 ? (
             <section className="mt-4">
               <h2 className="text-4xl font-medium">Casts</h2>
-              <div className="flex gap-4 mt-4 flex-wrap w-full">
+              <div className="flex gap-4 mt-4 flex-wrap w-full justify-center md:justify-start">
                 {Array.isArray(credits) &&
                   credits
                     .slice(0, 10)

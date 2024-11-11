@@ -55,7 +55,7 @@ const Header = ({ setSelectedGenre, mediaType, selectedGenre }) => {
           Select Genre
         </button>
         {showDropdown && (
-          <div className="absolute top-full left-0 bg-white text-black rounded shadow-lg mt-2 z-50">
+          <div className="absolute top-full h-[70vh] overflow-scroll bg-white text-black rounded shadow-lg mt-2 z-50">
             <button onClick={clearFilter} className="block px-4 py-2 hover:bg-gray-200 w-full text-left">
                 Clear Filter
             </button>

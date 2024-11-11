@@ -81,7 +81,7 @@ const Movies = ({ endpoint, mediaType = "movie", showGenre = false}) => {
               No results found.
             </p>
           ) : (
-            <section className="flex flex-col gap-4">
+            <section className="flex flex-col gap-4 mt-4">
               {showGenre && <Header  setSelectedGenre={setSelectedGenre} mediaType={mediaType} selectedGenre={selectedGenre} />}
               <div className="movie-list">
                 {movies.map((movie) => (
