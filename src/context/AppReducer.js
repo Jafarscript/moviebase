@@ -18,6 +18,14 @@ export default (state, action) => {
                 ...state,
                 darkTheme: !state.darkTheme
             }
+        case 'SET_PAGE':
+            return{
+                ...state, page: action.payload
+            };
+        case "SET_GENRE":
+            return{
+                ...state, selectedGenre: action.payload
+            }
         default:
             return state
     }

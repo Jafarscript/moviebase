@@ -13,10 +13,10 @@ const SettingsModal = ({setOpenSettings }) => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-80">
+      <div className={`${darkTheme? "bg-gray-800 text-white": 'bg-white'} p-6 rounded-lg shadow-lg w-80`}>
         <h2 className="text-2xl font-semibold dark:text-white">Settings</h2>
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-gray-700 dark:text-gray-200">Dark Mode</span>
+          <span className={`${darkTheme? "text-gray-200": 'text-gray-700'}`}>Dark Mode</span>
           <button
             onClick={toogleTheme}
             className={`w-12 h-6 rounded-full flex items-center ${darkTheme ? "bg-[#099268]" : "bg-gray-300"} p-1`}

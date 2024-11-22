@@ -100,8 +100,8 @@ const MoviesInfo = () => {
               alt={info.title || info.name}
               className="w-full h-full"
             />
-            <div className="absolute bottom-5 md:bottom-10 left-5 md:left-10 z-20">
-              <h1 className="text-6xl hidden lg:block font-bold text-[#099268] mb-4">
+            <div className="absolute bottom-5 md:bottom-10 left-2 md:left-10 z-20">
+              <h1 className="text-2xl md:text-3xl lg:text-6xl  font-bold text-[#099268] mb-4">
                 {info.title || info.name}
               </h1>
               <button

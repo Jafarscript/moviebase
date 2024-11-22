@@ -46,9 +46,9 @@ const Header = ({ setSelectedGenre, mediaType, selectedGenre }) => {
 
 
   return (
-    <header className="flex justify-between items-center text-black mb-5">
+    <header className="flex justify-between items-center text-black mb-5 relative">
       <h1 className={` ${darkTheme ? 'text-white' : ''} text-2xl font-bold capitalize`}>{mediaType} Explorer</h1>
-      <div className="relative">
+      <div>
         <button
           onClick={() => setShowDropdown(!showDropdown)}
           className="bg-green-600 px-4 py-2 rounded text-white"
@@ -56,15 +56,15 @@ const Header = ({ setSelectedGenre, mediaType, selectedGenre }) => {
           Select Genre
         </button>
         {showDropdown && (
-          <div className="absolute top-full w-auto h-[70vh]  overflow-x-hidden overflow-y-scroll bg-white text-black rounded shadow-lg mt-2 z-50 transition-all no-scrollbar scroll-smooth">
-            <button onClick={clearFilter} className="block px-4 py-2 hover:bg-gray-200 w-full text-left">
+          <div className={`absolute top-full w-full left-0   overflow-x-hidden overflow-y-scroll ${darkTheme ? 'bg-gray-800' : 'bg-white text-black '} rounded shadow-lg mt-2 z-50 flex items-start justify-center gap-3 py-4 flex-wrap transition-all no-scrollbar scroll-smooth`}>
+            <button onClick={clearFilter} className="px-4 py-2 bg-gray-200 rounded-2xl hover:text-white  hover:bg-[#099268]">
                 Clear Filter
             </button>
             {genres.map((genre) => (
               <button
                 key={genre.id}
                 onClick={() => handleGenreSelect(genre.id)}
-                className={`block px-4 py-2 hover:bg-gray-200 w-full text-left ${selectedGenre === genre.id && 'bg-[#099268] text-white'}`}
+                className={`px-4 py-2 hover:bg-[#099268] hover:text-white rounded-2xl  ${selectedGenre === genre.id ? 'bg-[#099268] text-white' : 'bg-gray-200'}`}
               >
                 {genre.name}
               </button>

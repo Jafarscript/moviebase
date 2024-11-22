@@ -8,59 +8,58 @@ import MovieCard from "../components/MovieCard";
 import { GlobalContext } from "../context/GlobalState";
 
 // eslint-disable-next-line react/prop-types
-const Movies = ({ endpoint, mediaType = "movie", showGenre = false}) => {
+const Movies = ({ endpoint, mediaType = "movie", showGenre = false }) => {
   // Default to "movie"
+  const { darkTheme, page, setPage, selectedGenre, setSelectedGenre } = useContext(GlobalContext);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(sessionStorage.getItem("page") || 1);
   const [inputPage, setInputPage] = useState(page);
   const [error, setError] = useState("");
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedGenre, setSelectedGenre] = useState('');
   const location = useLocation(); // Access the current route location
-  // const history = useHistory(); // Access history to navigate
-  const { darkTheme } = useContext(GlobalContext);
 
   useEffect(() => {
-    const savedGenre = sessionStorage.getItem("selectedGenre");
-  if (savedGenre) {
-    setSelectedGenre(savedGenre);
-  }
+    let cancelled = false
     setLoading(true);
+
+    // console.log(page)
 
     axios
       .get(`${endpoint}&page=${page}${selectedGenre ? `&with_genres=${selectedGenre}` : ""}`)
       .then((response) => {
+        if(!cancelled){
         setMovies(response.data.results);
-        setPage(response.data.page);
         setTotalPages(response.data.total_pages);
         setLoading(false);
         setInputPage(page);
+        }
       })
       .catch((error) => {
         console.error(error);
-        setLoading(true);
+        setLoading(false); // Set loading to false even on error
         setError(error.message);
       });
-      
-      sessionStorage.setItem("page", page);
-      sessionStorage.setItem("selectedGenre", selectedGenre || "");
-  
-  }, [endpoint, page,selectedGenre]);
+
+
+      return () => {
+        cancelled = true
+      }
+  }, [endpoint, page, selectedGenre]);
 
   useEffect(() => {
-    const [mediaType] = location.pathname.split('/').slice(1);
-  
-    // Check if the media type has changed
-    if (mediaType !== sessionStorage.getItem('previousMediaType')) {
-      sessionStorage.clear();
-      setPage(1);
-      setSelectedGenre('')
-      sessionStorage.setItem('previousMediaType', mediaType);
-    }
-  }, [location.pathname]);
-  
+    const currentMediaType = location.pathname.split("/")[1];
+    const previousMediaType = sessionStorage.getItem("previousMediaType");
 
+    if (currentMediaType !== previousMediaType) {
+      // Update session storage and reset states
+      sessionStorage.setItem("previousMediaType", currentMediaType);
+
+      setTimeout(() => {
+        setPage(1);
+        setSelectedGenre(""); // Reset page to 1 with delay
+      }, 100);
+    }
+  }, [location.pathname, setPage, setSelectedGenre]);
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -72,6 +71,18 @@ const Movies = ({ endpoint, mediaType = "movie", showGenre = false}) => {
     if (page > 1) {
       setPage(page - 1);
     }
+  };
+
+  const handleInputPageChange = (e) => {
+    const value = e.target.value;
+    // if (value > 0 && value <= totalPages) {
+      setInputPage(value);
+    // }
+  };
+
+  const handleInputPageSubmit = (e) => {
+    e.preventDefault();
+    setPage(inputPage);
   };
 
   return (
@@ -86,7 +97,9 @@ const Movies = ({ endpoint, mediaType = "movie", showGenre = false}) => {
             </p>
           ) : (
             <section className="flex flex-col gap-4 mt-4">
-              {showGenre && <Header  setSelectedGenre={setSelectedGenre} mediaType={mediaType} selectedGenre={selectedGenre} />}
+              {showGenre && (
+                <Header setSelectedGenre={setSelectedGenre} mediaType={mediaType} selectedGenre={selectedGenre} />
+              )}
               <div className="movie-list">
                 {movies.map((movie) => (
                   <MovieCard key={movie.id} movie={movie} mediaType={mediaType} />
@@ -94,34 +107,38 @@ const Movies = ({ endpoint, mediaType = "movie", showGenre = false}) => {
               </div>
             </section>
           )}
-        </> )}
+        </>
+      )}
       <div className="self-center flex gap-4 justify-center items-center mt-4">
-            <button
-              onClick={handlePreviousPage}
-              disabled={page === 1}
-              className="px-4 py-2 rounded-3xl text-white bg-[#099268] flex items-center justify-center"
-            >
-              Previous
-            </button>
-            <span>
-              Page{" "}
-              <form onSubmit={() => setPage(inputPage)} className="inline">
-              <input
-                type="number"
-                value={inputPage}
-                className="w-10 text-black text-center outline-none"
-                onChange={(e) => setInputPage(e.target.value)}
-              /></form>{" "}
-              of {totalPages}
-            </span>
-            <button
-              onClick={handleNextPage}
-              disabled={page === totalPages}
-              className="px-4 py-2 rounded-3xl text-white bg-[#099268] items-center justify-center"
-            >
-              Next
-            </button>
-          </div>
+        <button
+          onClick={handlePreviousPage}
+          disabled={page === 1}
+          className="px-4 py-2 rounded-3xl text-white bg-[#099268] flex items-center justify-center"
+        >
+          Previous
+        </button>
+        <span>
+          Page{" "}
+          <form onSubmit={handleInputPageSubmit} className="inline">
+            <input
+              type="number"
+              value={inputPage}
+              className="w-10 text-black text-center outline-none"
+              onChange={handleInputPageChange}
+              min="1"
+              max={totalPages}
+            />
+          </form>{" "}
+          of {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={page === totalPages}
+          className="px-4 py-2 rounded-3xl text-white bg-[#099268] items-center justify-center"
+        >
+          Next
+        </button>
+      </div>
     </section>
   );
 };
